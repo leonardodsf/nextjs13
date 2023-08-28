@@ -41,6 +41,7 @@ const fetchRestaurantByCity = (searchParams: SearchParams) => {
     cuisine: true,
     location: true,
     slug: true,
+    reviews: true,
   };
 
   const where: WhereProps = {}
