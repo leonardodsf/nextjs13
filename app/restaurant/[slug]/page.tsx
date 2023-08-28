@@ -7,6 +7,7 @@ import RestaurantDescription from './components/RestaurantDescription';
 import RestaurantImages from './components/RestaurantImages';
 import RestaurantReviews from './components/RestaurantReviews';
 import RestaurantReservationCard from './components/RestaurantReservationCard';
+import { notFound } from 'next/navigation';
 
 
 interface RestaurantDetailsPageProps {
@@ -43,7 +44,7 @@ const fetchRestaurantBySlug = async (slug: string): Promise<RestaurantBySlugType
   })
 
   if (!restaurant) {
-    throw new Error('This restaurant slug not exists')
+    notFound()
   }
 
   return restaurant

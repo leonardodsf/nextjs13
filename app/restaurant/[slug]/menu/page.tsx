@@ -1,6 +1,7 @@
 import RestaurantNavBar from '../components/RestaurantNavBar';
 import RestaurantMenu from '../components/RestaurantMenu';
 import { PrismaClient } from '@prisma/client';
+import { notFound } from 'next/navigation';
 
 interface RestaurantMenuPageProps {
   params: {
@@ -21,7 +22,7 @@ const fetchRestaurantMenuBySlug = async (slug: string) => {
   })
 
   if (!restaurant) {
-    throw new Error('This restaurant slug not exists')
+    notFound()
   }
 
   return restaurant.items
