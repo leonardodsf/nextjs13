@@ -1,5 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import validator from 'validator';
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
+import * as jose from 'jose';
 
 interface BodyResponseProps {
   firstName: string;
@@ -10,13 +13,15 @@ interface BodyResponseProps {
   password: string;
 }
 
-interface ErrorsProps extends BodyResponseProps {};
+interface ErrorsProps extends BodyResponseProps {}
 
 interface ValidationSchemaProps {
   key: 'firstName' | 'lastName' | 'email' | 'phone' | 'city' | 'password';
   valid: boolean;
-  errorMessage: string
+  errorMessage: string;
 }
+
+const prisma = new PrismaClient();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -65,9 +70,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const errors = validationSchema.reduce((accumulator, validation) => {
       if (!validation.valid) {
-        accumulator[validation.key] = validation.errorMessage
+        accumulator[validation.key] = validation.errorMessage;
       }
-      return accumulator
+      return accumulator;
     }, {} as ErrorsProps);
 
     if (Object.keys(errors).length) {
@@ -76,8 +81,43 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
+    const userWithEmail = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (userWithEmail) {
+      return res.status(200).send({
+        errorMessage: 'Email is associated with another account',
+      });
+    }
+
+    const saltPassword = 10;
+    const hashedPassword = await bcrypt.hash(password, saltPassword);
+
+    const user = await prisma.user.create({
+      data: {
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        city,
+        phone,
+        password: hashedPassword,
+      },
+    });
+
+    const alg = 'HS256';
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+
+    const token = await new jose.SignJWT({ email: user.email })
+      .setProtectedHeader({ alg })
+      .setExpirationTime('24h')
+      .sign(secret);
+
     return res.status(200).send({
-      message: 'User created with successfully!'
+      message: 'User has been created!',
+      token,
     });
   }
 
