@@ -11,32 +11,10 @@ interface JWTPayloadProps {
 const prisma = new PrismaClient();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const bearerToken = req.headers.authorization;
-  const errorMessage = 'Unauthorized, access is denied due to invalid credentials';
-
-  if (!bearerToken) {
-    return res.status(401).json({
-      errorMessage,
-    });
-  }
-
+  const bearerToken = req.headers.authorization as string;
   const token = bearerToken.split(' ')[1];
 
-  if (!token) {
-    return res.status(401).json({
-      errorMessage,
-    });
-  }
-
-  const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-
-  try {
-    await jose.jwtVerify(token, secret);
-  } catch (error) {
-    return res.status(401).json({
-      errorMessage,
-    });
-  }
+  const errorMessage = 'Unauthorized, access is denied due to invalid credentials';
 
   const payload = jwt.decode(token) as JWTPayloadProps;
 
