@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { useContext } from 'react';
+import { AuthenticationContext } from '../app/context/AuthContext';
 
 interface SignInProps {
   email: string;
@@ -6,16 +8,32 @@ interface SignInProps {
 }
 
 const useAuth = () => {
+  const { setAuth } = useContext(AuthenticationContext);
+
   const signIn = async ({ email, password }: SignInProps) => {
+    setAuth({
+      data: null,
+      error: null,
+      loading: true,
+    });
+
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/signin', {
+      const response = await axios.post('http://localhost:3001/api/auth/signin', {
         email,
         password,
       });
 
-      console.log({ response });
-    } catch (error) {
-      console.log({ error });
+      setAuth({
+        data: response.data,
+        error: null,
+        loading: false,
+      });
+    } catch (error: any) {
+      setAuth({
+        data: null,
+        error: error.response.data.errorMessage,
+        loading: false,
+      });
     }
   };
 
