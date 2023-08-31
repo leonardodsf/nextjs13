@@ -28,7 +28,7 @@ export interface AuthModalProps {
 
 export default function AuthModal({ isSignIn }: AuthModalProps) {
   const { loading, error } = useContext(AuthenticationContext);
-  const { signIn } = useAuth();
+  const { signIn, signUp } = useAuth();
 
   const [open, setOpen] = useState(false);
   const handleModalOpen = () => setOpen(true);
@@ -56,12 +56,17 @@ export default function AuthModal({ isSignIn }: AuthModalProps) {
 
   const handleSubmit = () => {
     if (isSignIn) {
-      signIn({
+      return signIn({
         email: inputs.email,
         password: inputs.password,
         handleModalClose,
       });
     }
+
+    signUp({
+      ...inputs,
+      handleModalClose,
+    })
   };
 
   const [disabled, setDisabled] = useState(true);
