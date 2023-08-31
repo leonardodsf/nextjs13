@@ -5,12 +5,13 @@ import { AuthenticationContext } from '../app/context/AuthContext';
 interface SignInProps {
   email: string;
   password: string;
+  handleModalClose?: () => void;
 }
 
 const useAuth = () => {
   const { setAuth } = useContext(AuthenticationContext);
 
-  const signIn = async ({ email, password }: SignInProps) => {
+  const signIn = async ({ email, password, handleModalClose }: SignInProps) => {
     setAuth({
       data: null,
       error: null,
@@ -28,6 +29,8 @@ const useAuth = () => {
         error: null,
         loading: false,
       });
+
+      handleModalClose?.();
     } catch (error: any) {
       setAuth({
         data: null,

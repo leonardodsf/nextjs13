@@ -31,8 +31,8 @@ export default function AuthModal({ isSignIn }: AuthModalProps) {
   const { signIn } = useAuth();
 
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleModalOpen = () => setOpen(true);
+  const handleModalClose = () => setOpen(false);
 
   const [inputs, setInputs] = useState({
     firstName: '',
@@ -56,7 +56,11 @@ export default function AuthModal({ isSignIn }: AuthModalProps) {
 
   const handleSubmit = () => {
     if (isSignIn) {
-      signIn(inputs);
+      signIn({
+        email: inputs.email,
+        password: inputs.password,
+        handleModalClose,
+      });
     }
   };
 
@@ -85,13 +89,13 @@ export default function AuthModal({ isSignIn }: AuthModalProps) {
     <div>
       <button
         className={`${renderContent('bg-cyan-800 text-white mr-3', '')} border p-1 px-4 rounded`}
-        onClick={handleOpen}
+        onClick={handleModalOpen}
       >
         {renderContent('Sign in', 'Sign up')}
       </button>
       <Modal
         open={open}
-        onClose={handleClose}
+        onClose={handleModalClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
