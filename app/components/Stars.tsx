@@ -36,8 +36,8 @@ export default function Stars({ reviews, rating }: StarsProps) {
       }
     }
 
-    return stars.map(star => {
-      const key = `${star}_${new Date().getTime()}`
+    return stars.map((star, index) => {
+      const key = `${index}_${new Date().getTime()}`
 
       return (
         <Image className="w-4 h-4 mr-1" key={key} src={star} alt="" />
