@@ -31,7 +31,7 @@ const useAuth = () => {
     } catch (error: any) {
       setAuth({
         data: null,
-        error: error.response.data.errorMessage,
+        error: error?.response?.data?.errorMessage || 'Has ocurred an error during login request',
         loading: false,
       });
     }
