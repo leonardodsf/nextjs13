@@ -3,6 +3,7 @@ import validator from 'validator';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import * as jose from 'jose';
+import { setCookie } from 'cookies-next';
 
 interface BodyResponseProps {
   firstName: string;
@@ -12,8 +13,6 @@ interface BodyResponseProps {
   city: string;
   password: string;
 }
-
-interface ErrorsProps extends BodyResponseProps {}
 
 interface ValidationSchemaProps {
   key: 'firstName' | 'lastName' | 'email' | 'phone' | 'city' | 'password';
@@ -68,16 +67,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     ];
 
-    const errors = validationSchema.reduce((accumulator, validation) => {
-      if (!validation.valid) {
-        accumulator[validation.key] = validation.errorMessage;
-      }
-      return accumulator;
-    }, {} as ErrorsProps);
+    const errors = validationSchema.filter(validation => !validation.valid)
 
-    if (Object.keys(errors).length) {
+    if (errors.length) {
       return res.status(400).json({
-        errors,
+        errorMessage: errors[0].errorMessage,
       });
     }
 
@@ -115,9 +109,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .setExpirationTime('24h')
       .sign(secret);
 
+    setCookie('jwt', token, {
+      req,
+      res,
+      maxAge: 60 * 6 * 24,
+    });
+
     return res.status(200).send({
-      message: 'User has been created!',
-      token,
+      firstName: user.first_name,
+      lastName: user.last_name,
+      email: user.email,
+      city: user.city,
+      phone: user.phone,
     });
   }
 

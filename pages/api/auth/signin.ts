@@ -10,8 +10,6 @@ interface BodyResponseProps {
   password: string;
 }
 
-interface ErrorsProps extends BodyResponseProps {}
-
 interface ValidationSchemaProps {
   key: 'email' | 'password';
   valid: boolean;
@@ -39,16 +37,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     ];
 
-    const errors = validationSchema.reduce((accumulator, validation) => {
-      if (!validation.valid) {
-        accumulator[validation.key] = validation.errorMessage;
-      }
-      return accumulator;
-    }, {} as ErrorsProps);
+    const errors = validationSchema.filter(validation => !validation.valid)
 
-    if (Object.keys(errors).length) {
+    if (errors.length) {
       return res.status(400).json({
-        errors,
+        errorMessage: errors[0].errorMessage,
       });
     }
 
