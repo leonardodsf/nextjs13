@@ -38,18 +38,12 @@ export const AuthenticationContext = createContext<AuthProps>({
 
 export default function AuthContext({ children }: AuthContextProps) {
   const [auth, setAuth] = useState<StateProps>({
-    loading: false,
+    loading: true,
     data: null,
     error: null,
   });
 
   const getUser = async () => {
-    setAuth({
-      data: null,
-      error: null,
-      loading: true,
-    });
-
     try {
       const jwt = getCookie('jwt')
 
