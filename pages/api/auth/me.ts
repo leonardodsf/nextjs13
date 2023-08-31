@@ -32,13 +32,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       id: true,
       first_name: true,
       last_name: true,
+      email: true,
       city: true,
       phone: true,
-      email: true,
-      created_at: true,
-      updated_at: true,
     }
   });
 
-  return res.status(200).json({ user });
+  if (!user) {
+    return res.status(401).json({
+      errorMessage: 'User not found'
+    })
+  }
+
+  return res.status(200).json({
+    id: user.id,
+    firstName: user.first_name,
+    lastName: user.last_name,
+    email: user.email,
+    city: user.city,
+    phone: user.phone,
+  });
 }
