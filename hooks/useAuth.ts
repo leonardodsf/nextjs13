@@ -19,7 +19,7 @@ interface SignUpProps {
   handleModalClose?: () => void;
 }
 
-const useAuth = () => {
+export default function useAuth () {
   const { setAuth } = useContext(AuthenticationContext);
 
   const signIn = async ({ email, password, handleModalClose }: SignInProps) => {
@@ -108,5 +108,3 @@ const useAuth = () => {
     signOut,
   };
 };
-
-export default useAuth;
