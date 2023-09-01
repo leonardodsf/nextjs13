@@ -1,6 +1,23 @@
-'use client'
+'use client';
+
+import DatePicker from 'react-datepicker';
+
+import { partySize, times } from '../../../../data';
+import { useState } from 'react';
+
+type DateType = Date | null;
 
 export default function RestaurantReservationCard() {
+  const [selectedDate, setSelectedDate] = useState<DateType>(new Date());
+
+  const handleChangeDatePicker = (date: DateType) => {
+    if (date) {
+      return setSelectedDate(date);
+    }
+
+    return setSelectedDate(null);
+  };
+
   return (
     <div className="fixed w-[20%] bg-white rounded p-3 shadow">
       <div className="text-center border-b pb-2 font-bold">
@@ -9,20 +26,34 @@ export default function RestaurantReservationCard() {
       <div className="my-3 flex flex-col">
         <label htmlFor="">Party size</label>
         <select name="" className="py-3 border-b font-light" id="">
-          <option value="">1 person</option>
-          <option value="">2 people</option>
+          {partySize.map((size) => (
+            <option key={size.value} value={size.value}>
+              {size.label}
+            </option>
+          ))}
         </select>
       </div>
       <div className="flex justify-between">
         <div className="flex flex-col w-[48%]">
           <label htmlFor="">Date</label>
-          <input type="text" className="py-3 border-b font-light w-28" />
+          <DatePicker
+            wrapperClassName="w-[48%]"
+            className="py-3 border-b font-light text-reg w-28"
+            dateFormat="MMMM d"
+            selected={selectedDate}
+            onChange={handleChangeDatePicker}
+          />
         </div>
         <div className="flex flex-col w-[48%]">
           <label htmlFor="">Time</label>
           <select name="" id="" className="py-3 border-b font-light">
             <option value="">7:30 AM</option>
             <option value="">9:30 AM</option>
+            {times.map(({ time, displayTime }) => (
+              <option key={time} value={time}>
+                {displayTime}
+              </option>
+            ))}
           </select>
         </div>
       </div>
