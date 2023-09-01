@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 
 interface BookingTablesObjectProps {
   [key: string]: {
-    [key: number]: true;
+    [key: number]: boolean;
   };
 }
 
@@ -120,7 +120,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return timeIsAfterOpeningHour && timeIsBeforeClosingHour
   });
 
-  return res.status(200).json({
-    availabilities,
-  });
+  return res.status(200).json(availabilities);
 }
