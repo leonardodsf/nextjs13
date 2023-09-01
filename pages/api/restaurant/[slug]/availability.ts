@@ -97,11 +97,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
   });
 
+  const availabilities = searchTimesWithTables.map((searchTimesWithTable) => {
+    const sumSeats = searchTimesWithTable.tables.reduce((acc, table) => acc + table.seats, 0);
+
+    const parsedPartySize = parseInt(partySize, 10);
+
+    return {
+      time: searchTimesWithTable.time,
+      available: sumSeats >= parsedPartySize,
+    };
+  });
+
   return res.status(200).json({
-    searchTimes,
-    bookings,
-    tables,
-    searchTimesWithTables,
-    bookingTablesObject,
+    availabilities,
   });
 }
