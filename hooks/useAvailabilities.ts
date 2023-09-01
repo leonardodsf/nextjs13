@@ -8,10 +8,17 @@ interface GetAvailabilitiesProps {
   partySize: string;
 }
 
+interface DataStateProps {
+  time: string;
+  available: boolean;
+}
+
+type DataStateType = DataStateProps[] | null
+
 export default function useAvailabilities() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<DataStateType>(null);
 
   const getAvailabilities = async ({ slug, day, time, partySize }: GetAvailabilitiesProps) => {
     setLoading(true);
