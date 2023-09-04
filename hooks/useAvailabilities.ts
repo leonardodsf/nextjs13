@@ -25,7 +25,7 @@ export default function useAvailabilities() {
 
     try {
       const response = await axios.get(
-        `http://localhost:3001/api/restaurant/${slug}/availability`,
+        `http://localhost:3002/api/restaurant/${slug}/availability`,
         {
           params: {
             day,

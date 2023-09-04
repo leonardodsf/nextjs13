@@ -30,7 +30,7 @@ export default function useAuth () {
     });
 
     try {
-      const response = await axios.post('http://localhost:3001/api/auth/signin', {
+      const response = await axios.post('http://localhost:3002/api/auth/signin', {
         email,
         password,
       });
@@ -67,7 +67,7 @@ export default function useAuth () {
     });
 
     try {
-      const response = await axios.post('http://localhost:3001/api/auth/signup', {
+      const response = await axios.post('http://localhost:3002/api/auth/signup', {
         firstName,
         lastName,
         email,

@@ -57,7 +57,7 @@ export default function AuthContext({ children }: AuthContextProps) {
 
       const bearerToken = `Bearer ${jwt}`
 
-      const response = await axios.get('http://localhost:3001/api/auth/me', {
+      const response = await axios.get('http://localhost:3002/api/auth/me', {
         headers: {
           Authorization: bearerToken
         }
