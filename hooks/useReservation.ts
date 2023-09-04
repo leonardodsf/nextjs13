@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, Dispatch, SetStateAction} from 'react';
 import axios from 'axios';
 
 interface GetAvailabilitiesProps {
@@ -12,6 +12,7 @@ interface GetAvailabilitiesProps {
   bookerEmail: string;
   bookerOccasion: string;
   bookerRequest: string;
+  setDidBook:  Dispatch<SetStateAction<boolean>>;
 }
 
 export default function useReservation() {
@@ -29,6 +30,7 @@ export default function useReservation() {
     bookerEmail,
     bookerOccasion,
     bookerRequest,
+    setDidBook,
   }: GetAvailabilitiesProps) => {
     setLoading(true);
 
@@ -51,7 +53,8 @@ export default function useReservation() {
           }
         }
       );
-      
+
+      setDidBook(true)
       return response.data
     } catch (error: any) {
       const errorMessage =
