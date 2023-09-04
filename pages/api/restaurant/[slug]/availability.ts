@@ -1,12 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { times } from '../../../../data';
 import { PrismaClient } from '@prisma/client';
 
-interface BookingTablesObjectProps {
-  [key: string]: {
-    [key: number]: boolean;
-  };
-}
+import { findAvailableTables } from '../../../../services/restaurant/findAvailableTables'
 
 const prisma = new PrismaClient();
 
@@ -26,44 +21,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   }
 
-  const searchTimes = times.find((t) => t.time === time)?.searchTimes;
-
-  if (!searchTimes) {
-    return res.status(400).json({
-      errorMessage,
-    });
-  }
-
-  const firstAvailabilityDate = new Date(`${day}T${searchTimes[0]}`);
-  const lastAvailabilityDate = new Date(`${day}T${searchTimes[searchTimes.length - 1]}`);
-
-  const bookings = await prisma.booking.findMany({
-    where: {
-      booking_time: {
-        gte: firstAvailabilityDate,
-        lte: lastAvailabilityDate,
-      },
-    },
-    select: {
-      number_of_people: true,
-      booking_time: true,
-      tables: true,
-    },
-  });
-
-  const bookingTablesObject: BookingTablesObjectProps = {};
-
-  bookings.forEach((booking) => {
-    const bookingTime = booking.booking_time.toISOString();
-
-    bookingTablesObject[bookingTime] = booking.tables.reduce((acc, table) => {
-      return {
-        ...acc,
-        [table.table_id]: true,
-      };
-    }, {});
-  });
-
   const restaurant = await prisma.restaurant.findUnique({
     where: {
       slug,
@@ -81,23 +38,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   }
 
-  const tables = restaurant.tables;
+  const searchTimesWithTables = await findAvailableTables({
+    res,
+    time,
+    day,
+    errorMessage,
+    restaurant,
+  })
 
-  const searchTimesWithTables = searchTimes.map((searchTime) => {
-    const searchTimeDate = new Date(`${day}T${searchTime}`);
-
-    return {
-      date: searchTimeDate,
-      time: searchTime,
-      tables,
-    };
-  });
-
-  searchTimesWithTables.forEach((searchTimesWithTable) => {
-    searchTimesWithTable.tables = searchTimesWithTable.tables.filter(
-      (table) => !bookingTablesObject[searchTimesWithTable.date.toISOString()]?.[table.id]
-    );
-  });
+  if (!searchTimesWithTables) {
+    return res.status(400).json({
+      errorMessage,
+    });
+  }
 
   const availabilities = searchTimesWithTables.map((searchTimesWithTable) => {
     const sumSeats = searchTimesWithTable.tables.reduce((acc, table) => acc + table.seats, 0);
