@@ -1,0 +1,209 @@
+{
+	"info": {
+		"_postman_id": "a2bd23f2-2216-4378-bfab-09f85008e07d",
+		"name": "Bootcamp-NextJS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29434752"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe2@gmail.com\",\n    \"phone\": \"5551995849500\",\n    \"city\": \"São Leopoldo\",\n    \"password\": \"V4isentandoateochao@\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/signup",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Signin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john.doe2@gmail.com\",\n    \"password\": \"V4isentandoateochao@\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/signin",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Me",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvaG4uZG9lMkBnbWFpbC5jb20iLCJleHAiOjE2OTM1MTQ5NTF9.imbBsNVZ1piucDasxWvRNETi47u9rspSI6WY_EYStzo",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/auth/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "restaurant",
+			"item": [
+				{
+					"name": "[slug] / availability",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/restaurant/vivaan-fine-indian-cuisine-ottawa/availability?day=2023-09-01&time=20:30:00.000Z&partySize=6",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"restaurant",
+								"vivaan-fine-indian-cuisine-ottawa",
+								"availability"
+							],
+							"query": [
+								{
+									"key": "day",
+									"value": "2023-09-01"
+								},
+								{
+									"key": "time",
+									"value": "20:30:00.000Z"
+								},
+								{
+									"key": "partySize",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[slug] / reserve",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bookerEmail\": \"laith@gmail.com\",\n    \"bookerPhone\": \"5551995849500\",\n    \"bookerFirstName\": \"Laith\",\n    \"bookerLastName\": \"Harb\",\n    \"bookerOccasion\": \"Any occasion, but an occasion\",\n    \"bookerRequest\": \"Any request, but a request\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/restaurant/vivaan-fine-indian-cuisine-ottawa/reserve?day=2023-09-01&time=20:30:00.000Z&partySize=6",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"restaurant",
+								"vivaan-fine-indian-cuisine-ottawa",
+								"reserve"
+							],
+							"query": [
+								{
+									"key": "day",
+									"value": "2023-09-01"
+								},
+								{
+									"key": "time",
+									"value": "20:30:00.000Z"
+								},
+								{
+									"key": "partySize",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
