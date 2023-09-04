@@ -87,7 +87,7 @@ export default function AuthModal({ isSignIn }: AuthModalProps) {
       return setDisabled(false);
     }
 
-    setDisabled(true);
+    return setDisabled(true);
   }, [isSignIn, inputs]);
 
   return (
